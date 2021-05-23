@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private static let DEFAULT_COUNTRY_VALUE = ""
-    var window: UIWindow?
+//    var window: UIWindow?
     var pulseView = PulseView()
     var secondView: SecondViewController?
     
