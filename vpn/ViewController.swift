@@ -37,8 +37,8 @@ class ViewController: UIViewController {
         self.navigationItem.title = "Secure VPN"
     }
     
-    func setLaunchButton(countryName: String = "", countryUrl: String = "") {
-        if countryName != "" {
+    func setLaunchButton(countryName: String = DEFAULT_COUNTRY_VALUE, countryUrl: String = DEFAULT_COUNTRY_VALUE) {
+        if countryName != ViewController.DEFAULT_COUNTRY_VALUE {
             pulseView.setViewElements(name: countryName, iconUrl: countryUrl)
         } else {
             pulseView.setViewElements()
@@ -55,6 +55,51 @@ class ViewController: UIViewController {
             pulseView.widthAnchor.constraint(equalToConstant: subviewWidth),
             pulseView.heightAnchor.constraint(equalToConstant: subviewWidth)
         ])
+        
+        pulseVpnView()
+    }
+    
+    func pulseVpnView() {
+        let circulePath = UIBezierPath(arcCenter: .zero, radius: self.view.frame.size.width / 2, startAngle: 0.0, endAngle: 2 * .pi, clockwise: true)
+        let pulseLayer = CAShapeLayer()
+        pulseLayer.path = circulePath.cgPath
+        pulseLayer.lineWidth = 10
+        pulseLayer.fillColor = UIColor.clear.cgColor
+        pulseLayer.strokeColor = UIColor.white.cgColor
+        pulseLayer.lineCap = CAShapeLayerLineCap.round
+        pulseLayer.position = CGPoint(x: self.view.frame.width / 4, y: self.view.frame.width / 4)
+        pulseLayer.shadowColor = UIColor.white.cgColor
+        pulseLayer.shadowOpacity = 0.5
+        pulseLayer.shadowOffset = .zero
+        pulseLayer.shadowRadius = 20
+        pulseLayer.opacity = 0.5
+        UIView.animate(withDuration: 10, delay: 0, options: .curveEaseOut) {
+            pulseLayer.lineWidth += 20
+            pulseLayer.opacity = 0.5
+        } completion: { (true) in
+            print("Done")
+        }
+        pulseVpnViewAnimation(pulseLayer: pulseLayer)
+        pulseView.layer.addSublayer(pulseLayer)
+    }
+    
+    func pulseVpnViewAnimation(pulseLayer: CAShapeLayer) {
+        let animationView = CABasicAnimation(keyPath: "transform.scale")
+        animationView.duration = 4.0
+        animationView.fromValue = 0.5
+333
+        animationView.toValue = 2
+        animationView.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
+        animationView.repeatCount = .greatestFiniteMagnitude
+        pulseLayer.add(animationView, forKey: "scale")
+//
+        let opacityAnimationView = CABasicAnimation(keyPath: #keyPath(CALayer.opacity))
+        opacityAnimationView.duration = 4.0
+        opacityAnimationView.fromValue = 2
+        opacityAnimationView.toValue = 0.5
+        opacityAnimationView.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeIn)
+        opacityAnimationView.repeatCount = .greatestFiniteMagnitude
+        pulseLayer.add(opacityAnimationView, forKey: "opacity")
     }
     
     @objc func moveToSecondViewController() {
