@@ -9,13 +9,16 @@ import UIKit
 import Cartography
 
 class PulseView: UIView {
+    private static let DEFAULT_TIMER = "00:00"
     private static let DEFAULT_COUNTRY_NAME = "What's country?"
     private static let DEFAULT_COUNTRY_URL = "question"
+    private var timer: UILabel?
     private var name: UILabel?
     private var icon: UIImageView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.timer = UILabel()
         self.name = UILabel()
         self.icon = UIImageView()
         
@@ -35,7 +38,11 @@ class PulseView: UIView {
         self.layer.backgroundColor = UIColor.white.cgColor
     }
     
-    func setViewElements(name: String = DEFAULT_COUNTRY_NAME, iconUrl: String = DEFAULT_COUNTRY_URL) {
+    func changeTimerValue(time: String) {
+        self.timer?.text = time
+    }
+    func setViewElements(timer: String = DEFAULT_TIMER, name: String = DEFAULT_COUNTRY_NAME, iconUrl: String = DEFAULT_COUNTRY_URL) {
+            self.timer?.text = timer
             self.name?.text = name
             self.icon?.image = UIImage(named: iconUrl)
     }
@@ -44,6 +51,10 @@ class PulseView: UIView {
 private extension PulseView {
     
     func initElements() {
+        timer?.textColor = .black
+        timer?.font = UIFont.systemFont(ofSize: 20.0)
+        timer?.textAlignment = NSTextAlignment.center
+        
         name?.textColor = .black
         name?.font = UIFont.systemFont(ofSize: 20.0)
         name?.textAlignment = NSTextAlignment.center
@@ -54,6 +65,7 @@ private extension PulseView {
     }
     
     func addViews() {
+        self.addSubview(timer!)
         self.addSubview(name!)
         self.addSubview(icon!)
     }
@@ -72,6 +84,13 @@ private extension PulseView {
             name.left == view.left
             name.right == view.right
             name.height == view.height / 8
+        }
+        
+        constrain(timer!, icon!, self) { timer, icon, view in
+            timer.top == view.top
+            timer.left == view.left
+            timer.right == view.right
+            timer.bottom == icon.top 
         }
     }
 }
